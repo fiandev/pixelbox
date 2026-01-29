@@ -2,6 +2,8 @@
 
 A professional web-based pixel art editor built with vanilla JavaScript and HTML5 Canvas. Create stunning pixel art with powerful drawing tools, effects, and export options perfect for game developers and digital artists.
 
+<img width="1920" height="1200" alt="Screenshot_20260129_113337" src="https://github.com/user-attachments/assets/4cfa2fe8-3833-4ea4-9e3c-ba6d05e4e40f" />
+
 ## 🎨 Features
 
 ### Drawing Tools
