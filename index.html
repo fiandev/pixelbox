@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Pixel Art Studio - Create Amazing Pixel Art Online | PixelBox</title>
+        <meta name="description" content="Create stunning pixel art online with PixelBox. Professional pixel art editor with drawing tools, effects, and export options. Perfect for game developers and digital artists." />
+        <meta name="keywords" content="pixel art, pixel art editor, online pixel art, pixel art creator, pixel art tools, game art, sprite editor, pixel drawing" />
+        <meta name="author" content="Fiandev" />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="Pixel Art Studio - Create Amazing Pixel Art Online | PixelBox" />
+        <meta property="og:description" content="Create stunning pixel art online with PixelBox. Professional pixel art editor with drawing tools, effects, and export options." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://pixel-studio.fiandev.com" />
+        <meta property="og:image" content="https://fiandev.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Pixel Art Studio - Create Amazing Pixel Art Online | PixelBox" />
+        <meta name="twitter:description" content="Create stunning pixel art online with PixelBox. Professional pixel art editor with drawing tools, effects, and export options." />
+        <meta name="twitter:image" content="https://fiandev.com/og-image.png" />
+        <link rel="icon" type="image/png" href="https://fiandev.com/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/svg+xml" href="https://fiandev.com/favicon.svg" />
+        <link rel="shortcut icon" href="https://fiandev.com/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="https://fiandev.com/apple-touch-icon.png" />
+        <link rel="manifest" href="https://fiandev.com/site.webmanifest" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            body {
+                background-color: #0f172a;
+                overflow: hidden;
+            }
+            canvas {
+                image-rendering: pixelated;
+                image-rendering: crisp-edges;
+                cursor: crosshair;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+                transition:
+                    width 0.1s ease,
+                    height 0.1s ease;
+                background-color: white;
+            }
+            .canvas-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-image:
+                    linear-gradient(45deg, #1e293b 25%, transparent 25%),
+                    linear-gradient(-45deg, #1e293b 25%, transparent 25%),
+                    linear-gradient(45deg, transparent 75%, #1e293b 75%),
+                    linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+                background-size: 20px 20px;
+                background-position:
+                    0 0,
+                    0 10px,
+                    10px -10px,
+                    -10px 0px;
+            }
+            .tool-active {
+                background-color: #3b82f6 !important;
+                color: white;
+            }
+            .drag-over {
+                background-color: rgba(59, 130, 246, 0.1) !important;
+                outline: 2px dashed #3b82f6;
+                outline-offset: -4px;
+            }
+        </style>
+    </head>
+    <body class="h-screen flex flex-col text-slate-200">
+        <header
+            class="bg-slate-900 border-b border-slate-700 p-4 flex justify-between items-center shrink-0"
+        >
+            <div class="flex items-center gap-4">
+                <h1 class="text-xl font-bold tracking-tight text-blue-400">
+                    PIXEL<span class="text-white">BOX</span>
+                </h1>
+            </div>
+            <div class="flex gap-4 items-center">
+                <input
+                    type="file"
+                    id="image-upload"
+                    accept="image/*"
+                    class="hidden"
+                />
+                <button
+                    onclick="document.getElementById('image-upload').click()"
+                    class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-medium transition flex items-center gap-2"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" x2="12" y1="3" y2="15" />
+                    </svg>
+                    Import Gambar
+                </button>
+                <div class="flex bg-slate-800 rounded-lg p-1 gap-1">
+                    <button
+                        id="tool-draw"
+                        class="p-2 rounded-md hover:bg-slate-700 transition tool-active"
+                        title="Draw"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="m12 19 7-7 3 3-7 7-3-3z" />
+                            <path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+                            <path d="m2 2 5 5" />
+                            <path d="m9.5 14.5 4 4" />
+                        </svg>
+                    </button>
+                    <button
+                        id="tool-erase"
+                        class="p-2 rounded-md hover:bg-slate-700 transition"
+                        title="Erase"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path
+                                d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"
+                            />
+                            <path d="M22 21H7" />
+                            <path d="m5 11 9 9" />
+                        </svg>
+                    </button>
+                    <button
+                        id="tool-picker"
+                        class="p-2 rounded-md hover:bg-slate-700 transition"
+                        title="Color Picker"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="m2 22 1-1h3l9-9" />
+                            <path d="M3 21v-3l9-9" />
+                            <path
+                                d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l-3-3Z"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <input
+                    type="color"
+                    id="color-input"
+                    value="#3b82f6"
+                    class="w-10 h-10 border-none rounded cursor-pointer bg-transparent"
+                />
+                <button
+                    id="export-btn"
+                    class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition flex items-center gap-2"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" x2="12" y1="15" y2="3" />
+                    </svg>
+                    Export
+                </button>
+            </div>
+        </header>
+
+        <main class="relative flex-1 flex flex-col md:flex-row overflow-hidden">
+            <aside
+                class="w-full md:w-72 bg-slate-900 border-r border-slate-700 p-4 space-y-6 shrink-0 overflow-y-auto"
+            >
+                <section>
+                    <label class="block text-sm font-medium text-slate-400 mb-2"
+                        >Resolusi</label
+                    >
+                    <select
+                        id="res-select"
+                        class="w-full bg-slate-800 border border-slate-700 rounded-md p-2 text-sm"
+                    >
+                        <option value="1:1">1:1 Kotak</option>
+                        <option value="4:3">4:3 Klasik</option>
+                        <option value="18:9">18:9 Widescreen</option>
+                    </select>
+                </section>
+                <section>
+                    <label class="block text-sm font-medium text-slate-400 mb-2"
+                        >Orientasi</label
+                    >
+                    <div class="grid grid-cols-2 gap-2">
+                        <button
+                            id="orient-h"
+                            class="bg-slate-800 p-2 rounded border border-slate-700 tool-active text-xs"
+                        >
+                            Horizontal
+                        </button>
+                        <button
+                            id="orient-v"
+                            class="bg-slate-800 p-2 rounded border border-slate-700 text-xs"
+                        >
+                            Vertikal
+                        </button>
+                    </div>
+                </section>
+                <section>
+                    <label class="block text-sm font-medium text-slate-400 mb-2"
+                        >Kepadatan Grid</label
+                    >
+                    <input
+                        type="range"
+                        id="density-slider"
+                        min="16"
+                        max="128"
+                        step="1"
+                        value="32"
+                        class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                    />
+                    <div
+                        class="flex justify-between text-[10px] text-slate-500 mt-1"
+                    >
+                        <span>16px</span>
+                        <span id="density-val">32px</span>
+                        <span>128px</span>
+                    </div>
+                </section>
+                <section>
+                    <label
+                        class="block text-sm font-medium text-slate-400 mb-2 text-indigo-400 font-bold"
+                        >Efek Pixelate</label
+                    >
+                    <input
+                        type="range"
+                        id="pixelate-slider"
+                        min="1"
+                        max="50"
+                        step="1"
+                        value="1"
+                        class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                    />
+                    <div
+                        class="flex justify-between text-[10px] text-slate-500 mt-1"
+                    >
+                        <span>Normal</span>
+                        <span id="pixelate-val">1px</span>
+                        <span>Maks</span>
+                    </div>
+                </section>
+                <section>
+                    <label class="block text-sm font-medium text-slate-400 mb-2"
+                        >Ukuran Kuas</label
+                    >
+                    <input
+                        type="range"
+                        id="brush-slider"
+                        min="1"
+                        max="10"
+                        step="1"
+                        value="1"
+                        class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                    />
+                    <div
+                        class="flex justify-between text-[10px] text-slate-500 mt-1"
+                    >
+                        <span>1px</span>
+                        <span id="brush-val">1px</span>
+                        <span>10px</span>
+                    </div>
+                </section>
+                <section class="pt-4">
+                    <button
+                        id="clear-btn"
+                        class="w-full border border-red-900/50 hover:bg-red-900/20 text-red-400 p-2 rounded text-sm transition"
+                    >
+                        Bersihkan Kanvas
+                    </button>
+                </section>
+            </aside>
+
+            <div
+                id="drop-zone"
+                class="flex-1 canvas-container p-8 overflow-auto transition-colors"
+            >
+                <canvas id="pixel-canvas"></canvas>
+            </div>
+
+            <div class="fixed bottom-4 right-4 grid grid-cols-3 gap-2">
+                <button
+                    id="zoom-out"
+                    class="bg-slate-800 p-2 rounded border border-slate-700 hover:bg-slate-700 transition"
+                    title="Zoom Out"
+                >
+                    <svg
+                        class="mx-auto"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" x2="16.65" y1="21" y2="16.65" />
+                        <line x1="8" x2="14" y1="11" y2="11" />
+                    </svg>
+                </button>
+                <button
+                    id="zoom-reset"
+                    class="bg-slate-800 p-2 rounded border border-slate-700 hover:bg-slate-700 transition text-[10px]"
+                    title="Reset Zoom"
+                >
+                    100%
+                </button>
+                <button
+                    id="zoom-in"
+                    class="bg-slate-800 p-2 rounded border border-slate-700 hover:bg-slate-700 transition"
+                    title="Zoom In"
+                >
+                    <svg
+                        class="mx-auto"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" x2="16.65" y1="21" y2="16.65" />
+                        <line x1="11" x2="11" y1="8" y2="14" />
+                        <line x1="8" x2="14" y1="11" y2="11" />
+                    </svg>
+                </button>
+            </div>
+        </main>
+
+        <script src="js/pixel-editor.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>
