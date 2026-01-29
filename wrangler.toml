@@ -1,15 +1,15 @@
-# Cloudflare Pages Configuration
+name = "pixel-studio"
+compatibility_date = "2026-01-29"
+account_id = "25433bf5a6444882b90ff8130ba92fda"
 
 [build]
-  # No build command needed for static site
   command = "echo 'Static site - no build required'"
   
 [build.environment]
   NODE_VERSION = "18"
 
 # Directory that contains the deploy-ready files
-[build.publish]
-  directory = "."
+pages_build_output_dir = "."
 
 # Headers for security and performance
 [[headers]]
