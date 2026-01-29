@@ -1,0 +1,31 @@
+# Cloudflare Pages Configuration
+
+[build]
+  # No build command needed for static site
+  command = "echo 'Static site - no build required'"
+  
+[build.environment]
+  NODE_VERSION = "18"
+
+# Directory that contains the deploy-ready files
+[build.publish]
+  directory = "."
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

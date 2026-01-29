@@ -1,0 +1,15 @@
+{
+  "name": "pixel-studio",
+  "version": "1.0.0",
+  "description": "A pixel art editor web application",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'No build step required - static files'",
+    "dev": "python3 -m http.server 8080",
+    "preview": "python3 -m http.server 8080"
+  },
+  "keywords": ["pixel-art", "editor", "canvas", "web"],
+  "author": "Fiandev",
+  "license": "MIT",
+  "devDependencies": {}
+}
